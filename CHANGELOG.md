@@ -59,3 +59,11 @@
 * Missing copy file `requirements.txt` pada dockerfile
 
 **Alasan :** Agar dependensi aplikasi dapat diinstal dengan benar saat membangun image Docker.
+
+## *[1.0.5] CL-14-08-2026*
+
+### Fixed
+
+* Downgrade pytest 9.1.1 > pytest 8.3.5
+
+**Alasan :** Karena versi sebelumnya tidak kompatibel dengan versi python 3.9 yang digunakan dalam base image docker.

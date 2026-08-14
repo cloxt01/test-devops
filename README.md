@@ -8,7 +8,7 @@ Clone repository dan masuk ke direktori project:
 
 ```bash
 git clone https://github.com/cloxt01/test-devops
-cd test-devops/docker
+cd test-devops
 ```
 
 ### Konfigurasi Environment
@@ -42,15 +42,10 @@ Keterangan:
 
 ### Build dan Menjalankan Container
 
-Masuk ke direktori Docker:
+Masuk ke direktori & jalankan dengan perintah berikut:
 
-```bash
+```bash:
 cd docker
-```
-
-Kemudian build dan jalankan service:
-
-```bash
 docker compose up -d --build
 ```
 
@@ -127,19 +122,33 @@ ansible-galaxy collection install community.general
 
 ### Playbooks
 
+#### Penggunaan Playbook
+
+Sebelum menjalankan playbook, pastikan anda sudah mengatur koneksi SSH untuk akses ke server target pada file inventory `ansible/inventory`.
+
+```bash
+ansible-playbook -i ansible/inventory ansible/playbooks/<nama-playbook>.yml
+```
+
+Contoh:
+
+```bash
+ansible-playbook -i ansible/inventory ansible/playbooks/docker.yml
+```
+
 #### `ansible/playbooks/docker.yml`
 
 Digunakan untuk:
 
 * Menginstal Docker Engine.
 * Menginstal Docker Compose.
-* Menyiapkan server target untuk menjalankan aplikasi berbasis container.
+* Memulai dan mengaktifkan service Docker.
 
 #### `ansible/playbooks/hardening.yml`
 
 Digunakan untuk menerapkan konfigurasi hardening pada server target, termasuk user, group, firewall, dan SSH.
 
-_Sebelum menjalankan playbook ini, pastikan SSH key (public) sudah digenerate manual, lalu salin ke `ansible/keys/<inventory-hostname>/pub`._
+_Sebelum menjalankan playbook ini, pastikan SSH key sudah digenerate manual, lalu salin (public-key) ke `ansible/keys/<inventory-hostname>/pub`._
 
 Generate key pair jika belum tersedia:
 
@@ -176,7 +185,7 @@ Pastikan SSH key sudah dikonfigurasi sebelum menjalankan playbook ini.
 
 #### `ansible/playbooks/deploy.yml`
 
-Digunakan untuk melakukan deployment aplikasi pada server target setelah environment dan Docker sudah dipersiapkan.
+Digunakan untuk melakukan deployment aplikasi pada server target.
 
 ---
 
@@ -188,9 +197,7 @@ Default credential database yang sebelumnya terdapat pada `app/app.py` dihapus.
 
 **Alasan:**
 
-Menyimpan credential secara langsung di source code berisiko menyebabkan kebocoran informasi sensitif, terutama saat pengembang lupa dalam membuat file konfigurasi.
-
-Konfigurasi database kemudian dipindahkan ke environment variable.
+Menyimpan credential secara langsung di source code berisiko menyebabkan kebocoran informasi sensitif.
 
 ---
 

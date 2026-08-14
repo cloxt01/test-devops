@@ -91,5 +91,5 @@ jobs:
                 file: dockerfile
                 push: true
                 tags: |
-                  ghcr.io/${{github.repository}}/test-devops:latest
-                  ghcr.io/${{github.repository}}/test-devops:${{github.sha}}
+                  ghcr.io/${{github.repository}}:latest
+                  ghcr.io/${{github.repository}}:${{github.sha}}

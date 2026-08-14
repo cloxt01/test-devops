@@ -107,3 +107,11 @@
 * Push image docker ke registry GHCR
 
 **Alasan :** Untuk mempermudah distribusi dan penggunaan image docker di berbagai lingkungan.
+
+## *[1.1.1] CL-14-08-2026*
+
+### Fixed
+
+* Perbaikan penulisan tag pada push image docker ke registry GHCR
+
+**Alasan :** memperbaiki penulisan tag agar sesuai dengan format yang benar dan menghindari kegagalan.

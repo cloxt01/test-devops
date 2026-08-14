@@ -1,8 +1,7 @@
 # Test Materi - DevOps
 
-## Quick Start
 
-**1. Containerization**
+## 1. Containerization
 - Clone repository
 ```bash
 git clone https://github.com/cloxt01/test-devops
@@ -32,11 +31,15 @@ APP_PORT=5000 # port default aplikasi
 docker-compose up --build
 ```
 
-**2. CI / CD**
+## 2. CI / CD
 
-**3. Infrastructure as Code**
+<img width="8192" height="1783" alt="IP Pool Request Flow-2026-08-14-155755" src="https://github.com/user-attachments/assets/fda12910-1587-42ba-b824-e1ee0382bdf4" />
 
-**4. Keputusan teknis yang diambil**
+  Gambar diatas menunjukan alur kerja (step by step) mulai dari push/pull request hingga push registry. Pipeline hanya akan dijalankan pada branch main. Setelah source code diambil sistem menjalankan linting, testing & vulnerablity scann. Jika seluruh tahap berhasil, base image akan di build dan di push ke registry GHCR.
+
+## 3. Infrastructure as Code
+
+## 4. Keputusan teknis yang diambil**
 
 - Penghapusan default kredensial database pada program aplikasi `app/app.py`
   

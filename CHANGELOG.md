@@ -137,3 +137,11 @@
 * Perubahan struktur direktori
 
 **Alasan :** Untuk memisahkan file atau folder agar lebih terorganisir dan mudah dikelola.
+
+## *[1.5.1] CL-15-08-2026*
+
+### Added
+
+* Penambahan nama container pada docker-compose.yml.
+
+**Alasan :** Untuk mempermudah identifikasi container yang berjalan dan menghindari konflik nama container

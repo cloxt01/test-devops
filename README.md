@@ -8,7 +8,7 @@ Clone repository dan masuk ke direktori project:
 
 ```bash
 git clone https://github.com/cloxt01/test-devops
-cd test-devops
+cd test-devops/docker
 ```
 
 ### Konfigurasi Environment

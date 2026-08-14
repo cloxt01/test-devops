@@ -51,3 +51,11 @@
 * remove unused salin file environment `.env` pada dockerfile 
 
 **Alasan :** Sudah tidak digunakan karena sudah diatur pada docker-compose.yml
+
+## *[1.0.4] CL-14-08-2026*
+
+### Fixed
+
+* Missing copy file `requirements.txt` pada dockerfile
+
+**Alasan :** Agar dependensi aplikasi dapat diinstal dengan benar saat membangun image Docker.

@@ -67,3 +67,11 @@
 * Downgrade pytest 9.1.1 > pytest 8.3.5
 
 **Alasan :** Karena versi sebelumnya tidak kompatibel dengan versi python 3.9 yang digunakan dalam base image docker.
+
+## *[1.0.6] CL-14-08-2026*
+
+### Added
+
+* Vulnerability scan dengan `trivy` pada base image docker
+
+**Alasan :** Untuk memastikan bahwa base image yang digunakan aman.

@@ -1,0 +1,5 @@
+[local]
+localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+
+[servers]
+server1 ansible_host=<SERVER-IP> ansible_port=<SERVER-SSH-PORT> ansible_user=<SERVER-SSH-USER> ansible_password=<SERVER-SSH-PASSWORD>

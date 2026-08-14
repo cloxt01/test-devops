@@ -1,0 +1,18 @@
+---
+- hosts: local
+  become: true
+  tasks:
+    - name: Update cache
+      ansible.builtin.apt:
+        update_cache: yes
+    - name: Install Docker
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - docker-compose
+        state: present
+    - name: Start Docker service
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true

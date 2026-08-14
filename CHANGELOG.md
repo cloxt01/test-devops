@@ -123,3 +123,17 @@
 * Penambahan izin akses `contents: read` dan `packages: write`
 
 **Alasan :** Untuk memastikan bahwa workflow memiliki izin yang diperlukan untuk membaca konten repositori dan menulis paket ke registry GHCR.
+
+## *[1.5.0] CL-15-08-2026*
+
+### Added
+
+* Penambahan playbook ansible untuk kebutuhan setup server.
+
+**Alasan :** Untuk mempermudah proses setup server target.
+
+### Changed
+
+* Perubahan struktur direktori
+
+**Alasan :** Untuk memisahkan file atau folder agar lebih terorganisir dan mudah dikelola.

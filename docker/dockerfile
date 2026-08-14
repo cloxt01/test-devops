@@ -10,8 +10,8 @@ RUN groupadd appgroup && useradd -u 10001 -g appgroup appuser
 # Set workdir
 WORKDIR /app
 
-# Saln file environment
-COPY app/requirements.txt .
+# Saln file aplikasi
+COPY app/ .
 
 # Upgrade pip
 RUN pip install --upgrade pip

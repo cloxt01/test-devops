@@ -1,0 +1,64 @@
+---
+- hosts: servers
+  become: true
+  tasks:
+    # Update cache
+    - name: Update cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    # User & Group
+    - name: Create user for the application
+      ansible.builtin.user:
+        name: "{{ user }}"
+        state: present
+        create_home: yes
+    - name: Create group for the application
+      ansible.builtin.group:
+        name: "{{ group }}"
+        state: present
+    - name: Add user to group
+      ansible.builtin.user:
+        name: "{{ user }}"
+        groups: "{{ group }}"
+        append: yes
+    # Firewall
+    - name: Install UFW
+      ansible.builtin.apt:
+        name: ufw
+        state: present
+    - name: Allow SSH
+      community.general.ufw:
+        rule: allow
+        proto: tcp
+        port: 22
+    - name: Allow HTTP
+      community.general.ufw:
+        rule: allow
+        proto: tcp
+        port: 80
+    - name: Enable firewall
+      community.general.ufw:
+        state: enabled
+        policy: deny
+        direction: incoming
+    # SSH Hardening
+    - name: Copy SSH public key
+      ansible.posix.authorized_key:
+        user: "{{ user }}"
+        state: present
+        key: "{{lookup('file', playbook_dir + '/../keys/' + inventory_hostname + '/pub')}}"
+    - name: Disable root login
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+    - name: Disable password authentication
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+    - name: Restart SSH service
+      ansible.builtin.systemd:
+        name: ssh
+        state: restarted

@@ -12,6 +12,7 @@
       ansible.builtin.user:
         name: "{{ user }}"
         state: present
+        shell: /bin/bash
         create_home: yes
     - name: Create group for the application
       ansible.builtin.group:

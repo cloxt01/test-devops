@@ -153,3 +153,12 @@
 * Penambahan stage pada playbook `docker.yml` mengikuti dokumentasi resmi.
 
 **Alasan :** Agar proses instalasi Docker lebih sesuai dengan dokumentasi resmi dan mengurangi potensi masalah saat instalasi.
+
+
+## *[1.6.0] CL-15-08-2026*
+
+### Added
+
+* Penambahan opsi `shell: /bin/bash` pada pembuatan user baru di playbook `hardening.yml`.
+
+**Alasan :** Agar user baru yang dibuat memiliki shell default yang sesuai.

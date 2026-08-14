@@ -75,3 +75,10 @@
 * Vulnerability scan dengan `trivy` pada base image docker
 
 **Alasan :** Untuk memastikan bahwa base image yang digunakan aman.
+
+## *[1.0.7] CL-14-08-2026*
+
+### Added
+
+* Hapus threshold/severity pada `trivy` : HIGH (testing only)
+**Alasan :** Menurunkan threshold untuk mempermudah testing (hanya untuk testing).

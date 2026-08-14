@@ -10,6 +10,9 @@ WORKDIR /app
 # Saln file environment
 COPY app/requirements.txt .
 
+# Upgrade pip
+RUN pip install --upgrade pip
+
 # Install dependencies
 RUN pip install -r requirements.txt
 

@@ -72,7 +72,7 @@ jobs:
             - name: Build Docker image
               run: |
                 docker build \
-                -f dockerfile \
+                -f docker/dockerfile \
                 -t test-devops:${{github.sha}} \
                 .
             - name: Scan Docker Image
@@ -92,7 +92,7 @@ jobs:
               uses: docker/build-push-action@v6
               with:
                 context: .
-                file: dockerfile
+                file: docker/dockerfile
                 push: true
                 tags: |
                   ghcr.io/${{github.repository}}:latest

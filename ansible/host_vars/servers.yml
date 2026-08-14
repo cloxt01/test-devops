@@ -1,4 +1,3 @@
 user: appuser
 group: appgroup
-playbook_dir: /home/ans/test-devops/ansible/playbooks
 app_dir: /opt/app

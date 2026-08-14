@@ -17,8 +17,8 @@
         group: "{{ group }}"
         mode: '0755'
       loop:
-        - "{{ playbook_dir + '/../../docker' }}"
-        - "{{ playbook_dir + '/../../app' }}"
+        - "{{ '/../../docker' }}"
+        - "{{ '/../../app' }}"
     - name: Deploy application
       ansible.builtin.command:
         cmd: docker compose -f docker/compose.yaml up -d

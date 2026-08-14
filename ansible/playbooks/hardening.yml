@@ -47,7 +47,7 @@
       ansible.posix.authorized_key:
         user: "{{ user }}"
         state: present
-        key: "{{lookup('file', playbook_dir + '/../keys/' + inventory_hostname + '/pub')}}"
+        key: "{{lookup('file', '../keys/' + inventory_hostname + '.pub')}}"
     - name: Disable root login
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config

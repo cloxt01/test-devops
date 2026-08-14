@@ -75,5 +75,5 @@ jobs:
               uses: aquasecurity/trivy-action@v0.36.0
               with:
                 image-ref: test-devops:${{github.sha}}
-                severity: CRITICAL
+                severity: HIGH,CRITICAL
                 exit-code: 1

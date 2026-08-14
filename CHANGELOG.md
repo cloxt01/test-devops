@@ -82,3 +82,10 @@
 
 * Hapus threshold/severity pada `trivy` : HIGH (testing only)
 **Alasan :** Menurunkan threshold untuk mempermudah testing (hanya untuk testing).
+
+## *[1.0.8] CL-14-08-2026*
+
+### Added
+
+* Update & upgrade package pada base image docker
+**Alasan :** Untuk memastikan bahwa semua paket dalam base image diperbarui ke versi terbaru dan mengurangi potensi kerentanan keamanan.

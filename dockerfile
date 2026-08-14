@@ -1,6 +1,9 @@
 # Gunakan image Python 3.9 slim sebagai base image
 FROM python:3.9-slim
 
+# Update dan upgrade package
+RUN apt-get update && apt-get upgrade -y
+
 # Buat user dan group
 RUN groupadd appgroup && useradd -u 10001 -g appgroup appuser
 

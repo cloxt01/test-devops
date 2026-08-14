@@ -32,3 +32,15 @@
 **Alasan :** Untuk memastikan data tetap ada meskipun container dihapus atau direstart.
 
 
+## *[1.0.2] CL-14-08-2026*
+
+### Added
+
+* modul & unit test aplikasi `pytest`
+
+**Alasan :** Untuk memastikan bahwa perilaku aplikasi berjalan sesuai dengan yang diharapkan.
+
+* modul & unit test aplikasi `ruff`
+
+**Alasan :** Untuk memastikan bahwa kode aplikasi tetap berfungsi dengan baik.
+

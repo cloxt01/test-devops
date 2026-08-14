@@ -53,3 +53,7 @@ docker-compose up --build
 - Perubahan sumber konfigurasi port pada program aplikasi `app/app.py`.
 
   **Alasan :** Agar port sama dengan yang diexpose oleh docker karena dari satu sumber yang sama.
+
+- Penggunakan image `python3.9-slim` sebagai base image aplikasi docker.
+  
+  **Alasan :** Karena diversi ini ringan dan cocok jika hanya untuk Task API kecil.

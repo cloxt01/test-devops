@@ -115,3 +115,11 @@
 * Perbaikan penulisan tag pada push image docker ke registry GHCR
 
 **Alasan :** memperbaiki penulisan tag agar sesuai dengan format yang benar dan menghindari kegagalan.
+
+## *[1.1.2] CL-14-08-2026*
+
+### Fixed
+
+* Penambahan izin akses `contents: read` dan `packages: write`
+
+**Alasan :** Untuk memastikan bahwa workflow memiliki izin yang diperlukan untuk membaca konten repositori dan menulis paket ke registry GHCR.

@@ -7,15 +7,10 @@ RUN groupadd appgroup && useradd -u 10001 -g appgroup appuser
 # Set workdir
 WORKDIR /app
 
-# Copy file aplikasi
-COPY app/ .
-
 # Install dependencies
 RUN pip install -r requirements.txt
 
-# Saln file environment
-COPY .env .
-
+# Ubah ownership
 RUN chown -R appuser:appgroup .
 
 # Jalankan aplikasi sebagai user non-root

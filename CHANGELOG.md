@@ -44,3 +44,10 @@
 
 **Alasan :** Untuk memastikan bahwa kode aplikasi tetap berfungsi dengan baik.
 
+## *[1.0.3] CL-14-08-2026*
+
+### Changed
+
+* remove unused salin file environment `.env` pada dockerfile 
+
+**Alasan :** Sudah tidak digunakan karena sudah diatur pada docker-compose.yml

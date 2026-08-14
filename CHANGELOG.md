@@ -81,6 +81,7 @@
 ### Added
 
 * Hapus threshold/severity pada `trivy` : HIGH (testing only)
+
 **Alasan :** Menurunkan threshold untuk mempermudah testing (hanya untuk testing).
 
 ## *[1.0.8] CL-14-08-2026*
@@ -88,4 +89,12 @@
 ### Added
 
 * Update & upgrade package pada base image docker
+
 **Alasan :** Untuk memastikan bahwa semua paket dalam base image diperbarui ke versi terbaru dan mengurangi potensi kerentanan keamanan.
+
+## *[1.0.9] CL-14-08-2026*
+
+### Changed
+
+* Aktifkan opsi `ignore-unfixed` pada konfigurasi trivy
+ **Alasan :** Abaikan peringatan kerentanan yang tidak diperbaiki pada image docker karena tidak ada patch yang tersedia.

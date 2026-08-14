@@ -145,3 +145,11 @@
 * Penambahan nama container pada docker-compose.yml.
 
 **Alasan :** Untuk mempermudah identifikasi container yang berjalan dan menghindari konflik nama container
+
+## *[1.5.5] CL-15-08-2026*
+
+### Added
+
+* Penambahan stage pada playbook `docker.yml` mengikuti dokumentasi resmi.
+
+**Alasan :** Agar proses instalasi Docker lebih sesuai dengan dokumentasi resmi dan mengurangi potensi masalah saat instalasi.

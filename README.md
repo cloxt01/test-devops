@@ -1,5 +1,8 @@
 # Test Materi - DevOps
 
+Sudah diuji pada OS : 
+ - `Ubuntu 22.04 LTS`
+
 ## 1. Containerization
 
 ### Clone Repository
@@ -44,7 +47,7 @@ Keterangan:
 
 Masuk ke direktori & jalankan dengan perintah berikut:
 
-```bash:
+```bash
 cd docker
 docker compose up -d --build
 ```

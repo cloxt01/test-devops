@@ -20,4 +20,5 @@ RUN chown -R appuser:appgroup .
 
 # Jalankan aplikasi sebagai user non-root
 USER appuser
+
 CMD gunicorn -b 0.0.0.0:${APP_PORT} app:app

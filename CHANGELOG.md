@@ -97,4 +97,13 @@
 ### Changed
 
 * Aktifkan opsi `ignore-unfixed` pada konfigurasi trivy
- **Alasan :** Abaikan peringatan kerentanan yang tidak diperbaiki pada image docker karena tidak ada patch yang tersedia.
+
+**Alasan :** Abaikan peringatan kerentanan yang tidak diperbaiki pada image docker karena tidak ada patch yang tersedia.
+
+## *[1.1.0] CL-14-08-2026*
+
+### Added
+
+* Push image docker ke registry GHCR
+
+**Alasan :** Untuk mempermudah distribusi dan penggunaan image docker di berbagai lingkungan.

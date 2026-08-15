@@ -195,3 +195,11 @@
 * Penambahan dashboard grafana untuk menampilkan metrik aplikasi.
 
 **Alasan :** Untuk mempermudah visualisasi metrik aplikasi dan memantau kinerja aplikasi secara real-time.
+
+## *[1.8.5] CL-15-08-2026*
+
+### Added
+
+* Penambahan stack pada deploy file & folder service pada playbook `deploy.yml`.
+
+**Alasan :** Memungkinkan untuk memulai stack monitoring (prometheus & grafana).

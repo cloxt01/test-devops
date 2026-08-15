@@ -11,78 +11,40 @@ Sudah diuji pada OS:
 
 ## Quick Start
 
-### 1. Installation
-
-Clone repository dan masuk ke direktori project:
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/cloxt01/test-devops
 cd test-devops
 ```
 
-### 2. Setup
+### 2. Setup Docker Environment
 
-- Salin & sesuaikan file environment docker:
-  ```bash
-  cp docker/.env.example docker/.env
-  nano docker/.env
-  ```
-- Install collection Ansible yang dibutuhkan:
-  ```bash
-  ansible-galaxy collection install community.general
-  ```
-- Sesuaikan konfigurasi server target pada file inventory:
-  ```bash
-  nano ansible/inventory
-  ```
+```bash
+cp docker/.env.example docker/.env
+nano docker/.env
+```
 
-  > _Untuk informasi lebih lanjut, silakan lihat bagian [Inventory](#inventory)._
+> _Detail variable, lihat [Konfigurasi Environment](#konfigurasi-environment)._
 
-- Sesuaikan variable pada host target:
+### 3. Setup Ansible
 
-  1. Host Variable (`host_vars`)
-     ```bash
-     nano ansible/host_vars/<hostname>.yml
-     ```
-  2. Group Variable (`group_vars/all/vault.yml`)
-     ```bash
-     cp ansible/group_vars/all/vault.yml.example ansible/group_vars/all/vault.yml
-     nano ansible/group_vars/all/vault.yml
-     ```
-- Vault:
+- Install collection yang dibutuhkan, sesuaikan inventory, host_vars, dan vault. Lihat [Infrastructure as Code](#3-infrastructure-as-code) untuk langkah lengkapnya.
 
-  - Encrypt vault file:
-    ```bash
-    ansible-vault encrypt ansible/group_vars/all/vault.yml
-    ```
-  - Simpan vault password:
-    ```bash
-    echo <YOUR-VAULT-PASSWORD> > ansible/.vault_pass
-    ```
+### 4. Jalankan Playbook
 
-  > _Untuk informasi lebih lanjut, silakan lihat bagian [Vault](#vault)._
+Jika server target adalah server fresh (baru), jalankan playbook berikut secara berurutan dari direktori `ansible/`:
 
-### 3. Start
+1. `docker.yml` — install Docker
+2. `hardening.yml` — hardening server (perlu SSH key, lihat [detail](#playbookshardeningyml))
+3. `deploy.yml` — deploy aplikasi
 
-Jalankan playbook Ansible untuk setup server target & sesuaikan urutannya sesuai kebutuhan.
-
-Jika server target adalah server fresh (baru), urutannya adalah:
-1. `playbooks/docker.yml`
-2. `playbooks/hardening.yml`
-3. `playbooks/deploy.yml`
-
-Untuk memulai :
-
-- Masuk ke direktori project:
 ```bash
 cd ansible
-```
-- Jalankan playbook
-```bash
 ansible-playbook -i inventory playbooks/<nama-playbook>.yml --vault-password-file .vault_pass
 ```
 
-> _Untuk informasi lebih lanjut, silakan lihat bagian [Playbooks](#playbooks)._
+Ganti `<nama-playbook>` sesuai urutan di atas (`docker`, `hardening`, `deploy`).
 
 ---
 
@@ -123,8 +85,6 @@ Keterangan:
 
 ### Build dan Menjalankan Container
 
-Masuk ke direktori & jalankan dengan perintah berikut:
-
 ```bash
 cd docker
 docker compose up -d --build
@@ -150,18 +110,15 @@ docker compose logs -f
 
 Gambar di atas menunjukkan alur CI/CD mulai dari perubahan source code hingga image berhasil dipublikasikan ke GitHub Container Registry (GHCR).
 
-Pipeline hanya dijalankan pada branch `main`.
+Pipeline hanya dijalankan pada branch `main`, dengan pendekatan **fail-fast** — kegagalan pada satu tahap menghentikan proses sebelum image dipublikasikan.
 
-Secara umum, tahapan pipeline adalah:
+Tahapan pipeline:
 
 1. Source code diambil dari repository.
 2. Linting dijalankan untuk memeriksa kualitas dan format kode.
 3. Testing dijalankan untuk memastikan fungsi aplikasi berjalan sesuai dengan yang diharapkan.
 4. Vulnerability scanning dilakukan untuk mendeteksi kerentanan pada dependency dan package aplikasi.
-5. Jika seluruh tahapan berhasil, Docker image aplikasi akan dibuild.
-6. Image yang berhasil dibuild kemudian di-push ke GitHub Container Registry (GHCR).
-
-Pipeline menggunakan pendekatan **fail-fast**, sehingga kegagalan pada tahap sebelumnya akan menghentikan proses sebelum image dipublikasikan.
+5. Jika seluruh tahapan berhasil, Docker image aplikasi akan dibuild dan di-push ke GHCR.
 
 ---
 
@@ -170,6 +127,12 @@ Pipeline menggunakan pendekatan **fail-fast**, sehingga kegagalan pada tahap seb
 Infrastructure as Code (IaC) menggunakan Ansible untuk melakukan provisioning, hardening, dan deployment pada server target.
 
 Workdir: `/ansible`
+
+### Install Ansible Collection
+
+```bash
+ansible-galaxy collection install community.general
+```
 
 ### Inventory
 
@@ -185,6 +148,7 @@ Contoh untuk local server:
 [servers]
 localhost
 
+[servers:vars]
 ansible_become=true
 ansible_become_method=sudo
 ```
@@ -202,19 +166,11 @@ ansible_become_method=sudo
 
 > Gunakan group inventory seperti `servers` pada playbook.
 
-### Install Ansible Collection
-
-Install collection yang dibutuhkan:
-
-```bash
-ansible-galaxy collection install community.general
-```
-
 ### Variable
 
-Sebelum menjalankan playbook, pastikan Anda sudah mengatur koneksi SSH untuk akses ke server target. Jika belum, gunakan perintah berikut untuk menyalin file konfigurasi SSH:
+Sebelum menjalankan playbook, pastikan koneksi SSH ke server target sudah diatur.
 
-#### 1. Host Vars
+#### Host Vars
 
 Untuk local:
 ```bash
@@ -226,44 +182,47 @@ Untuk non-local:
 cp host_vars/server.yml.example host_vars/server.yml
 ```
 
-#### 2. Group Vars
-
-Jika server target menggunakan sudo password, pastikan Anda sudah mengaturnya pada `host_vars` & `vault`. Jika belum, silakan ikuti langkah pada bagian [Vault](#vault) untuk membuat vault dan menyimpan password sudo secara aman.
-
-`host_vars/<hostname>.yml`:
+Isi `host_vars/<inventory-hostname>.yml` (jika server pakai sudo password):
 ```yaml
-ansible_become_password: "{{ vault_<hostname>_sudo_password }}"
+ansible_become_password: "{{ vault_<inventory-hostname>_sudo_password }}"
 ```
 
-`group_vars/all/vault.yml`:
-```yaml
-vault_<hostname>_sudo_password: <YOUR-SUDO-PASSWORD>
-```
+#### Group Vars & Vault
 
-### Vault
-
-Membuat vault:
+Salin template vault:
 ```bash
-ansible-vault create group_vars/all/vault.yml
+cp group_vars/all/vault.yml.example group_vars/all/vault.yml
+nano group_vars/all/vault.yml
 ```
 
-Mengedit vault:
+Isi dengan password sudo:
+```yaml
+vault_<inventory-hostname>_sudo_password: <YOUR-SUDO-PASSWORD>
+```
+
+Encrypt vault file:
+```bash
+ansible-vault encrypt group_vars/all/vault.yml
+```
+
+Simpan vault password:
+```bash
+echo <YOUR-VAULT-PASSWORD> > .vault_pass
+```
+
+Untuk mengedit vault yang sudah di-encrypt, gunakan:
 ```bash
 ansible-vault edit group_vars/all/vault.yml
 ```
 
+> Catatan: `ansible-vault create` hanya dipakai jika membuat vault baru dari nol (tanpa file example). Untuk project ini, alurnya selalu **copy dari `.example` → encrypt**, bukan `create`.
+
 ### Playbooks
 
-#### Penggunaan Playbook
+Jalankan dengan:
 
 ```bash
-ansible-playbook -i inventory playbooks/<nama-playbook>.yml
-```
-
-Contoh:
-
-```bash
-ansible-playbook -i inventory playbooks/docker.yml
+ansible-playbook -i inventory playbooks/<nama-playbook>.yml --vault-password-file .vault_pass
 ```
 
 #### `playbooks/docker.yml`
@@ -277,26 +236,24 @@ Digunakan untuk:
 
 Digunakan untuk menerapkan konfigurasi hardening pada server target, termasuk user, group, firewall, dan SSH.
 
-_Sebelum menjalankan playbook ini, pastikan SSH key sudah digenerate manual, lalu salin (public key) ke `ansible/keys/<inventory-hostname>.pub`._
+**Persiapan (wajib sebelum menjalankan playbook ini):**
+
+1. Generate SSH key pair jika belum tersedia:
+   ```bash
+   ssh-keygen -t ed25519
+   ```
+2. Salin public key ke direktori project:
+   ```bash
+   cp ~/.ssh/id_ed25519.pub keys/<inventory-hostname>.pub
+   ```
 
 Struktur key pada project:
 
 ```text
 ansible/
 └── keys/
-    └── <hostname>.pub
+    └── <inventory-hostname>.pub
 ```
-
-**Persiapan:**
-
-1. Generate key pair jika belum tersedia:
-   ```bash
-   ssh-keygen -t ed25519
-   ```
-2. Salin public key:
-   ```bash
-   cp ~/.ssh/id_ed25519.pub keys/<inventory-hostname>.pub
-   ```
 
 #### `playbooks/deploy.yml`
 
@@ -317,7 +274,6 @@ Default credential database yang sebelumnya terdapat pada `app/app.py` dihapus.
 Scope pemanggilan fungsi `init_db()` pada `app/app.py` diubah.
 
 **Alasan:** Memastikan proses inisialisasi database tetap dijalankan ketika aplikasi dijalankan menggunakan Gunicorn.
-
 
 ### 4.3 Penggunaan `python:3.9-slim` sebagai Base Image
 

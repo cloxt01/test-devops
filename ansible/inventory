@@ -1,6 +1,6 @@
 [servers]
 #localhost
-server
+#server
 
 [servers:vars]
 ansible_become=true

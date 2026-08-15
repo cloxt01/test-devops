@@ -170,3 +170,12 @@
 * Penambahan vault, guna menyimpan infomasi sensitif.
 
 **Alasan :** Untuk meningkatkan keamanan dengan menyimpan informasi sensitif seperti password dalam bentuk terenkripsi.
+
+## *[1.7.0] CL-15-08-2026*
+
+### Added
+
+* Penambahan endpoint `/metrics` pada program aplikasi.
+* Penambahan requirement `prometheus-client` pada file `requirements.txt`.
+
+**Alasan :** Untuk memungkinkan aplikasi mengekspor metrik.

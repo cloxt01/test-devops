@@ -259,3 +259,11 @@
 * Port expose pada service db di docker-compose.yml.
 
 **Alasan :** Untuk meningkatkan keamanan, port database tidak diekspos ke host, sehingga hanya dapat diakses oleh service lain dalam jaringan Docker internal.
+
+## *[1.9.30] CL-15-08-2026*
+
+### Added
+
+* Tambahkan bagian `Pertimbangan Keamanan` pada dokumentasi README.md.
+
+**Alasan :** Untuk memberikan panduan dan pertimbangan terkait keamanan dalam pengelolaan aplikasi.

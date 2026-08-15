@@ -269,19 +269,14 @@ Digunakan untuk melakukan deployment aplikasi pada server target.
 
 ## 4. Keputusan Teknis yang Diambil
 
-### 4.1 Penghapusan Default Credential Database
 
-Default credential database yang sebelumnya terdapat pada `app/app.py` dihapus.
-
-**Alasan:** Menyimpan credential secara langsung di source code berisiko menyebabkan kebocoran informasi sensitif.
-
-### 4.2 Perubahan Scope Fungsi `init_db()`
+### 4.1 Perubahan Scope Fungsi `init_db()`
 
 Scope pemanggilan fungsi `init_db()` pada `app/app.py` diubah.
 
 **Alasan:** Memastikan proses inisialisasi database tetap dijalankan ketika aplikasi dijalankan menggunakan Gunicorn.
 
-### 4.3 Penggunaan `python:3.9-slim` sebagai Base Image
+### 4.2 Penggunaan `python:3.9-slim` sebagai Base Image
 
 Docker image aplikasi menggunakan:
 
@@ -291,12 +286,48 @@ FROM python:3.9-slim
 
 **Alasan:** Image `slim` memiliki ukuran yang lebih kecil dibandingkan image Python standar sehingga lebih sesuai untuk aplikasi API sederhana.
 
-### 4.4 Versi untuk setiap image docker
+### 4.3 Versi untuk setiap image docker
 
 Semua image docker menggunakan versi yang statis
 
 **Alasan:** Menggunakan versi statis memastikan konsistensi dalam deployment, serta menghindari masalah yang mungkin timbul akibat perubahan versi.
 
-### 4.5 Penonaktifan login & password autentikasi `root` user pada target server
+### 4.4 Penonaktifan login & password autentikasi `root` user pada target server
 
 **Alasan:** Meminimalisir akses `root` untuk mengurangi risiko penyalahgunaan akses root dan meningkatkan keamanan server.
+
+## 5. Pertimbangan Keamanan
+
+### 5.1 Penggunaan `docker/.env` untuk Menyimpan Credential
+
+Semua credential sensitif seperti database username dan password, port aplikasi dalam file `docker/.env` yang tidak di-commit ke repository.
+
+### 5.2 Penghapusan Default Credential Database
+
+Default credential database yang sebelumnya terdapat pada `app/app.py` dihapus.
+
+**Alasan:** Menyimpan credential secara langsung di source code berisiko menyebabkan kebocoran informasi sensitif.
+
+### 5.3 Penghapusan Port Database dari host
+
+Port database yang sebelumnya di expose ke host dihapus dari file `docker/compose.yaml`.
+
+**Alasan:** Meningkatkan keamanan dengan membatasi akses ke database hanya dari dalam jaringan Docker, sehingga mengurangi risiko akses tidak sah dari luar.
+
+### 5.4 Penggunaan vault untuk menyimpan password sudo
+
+Password sudo disimpan dalam file vault yang dienkripsi dan tidak di-commit ke repository.
+
+Alasan: Meningkatkan keamanan dengan melindungi password sudo dari akses tidak sah.
+
+### 5.5 Monitoring Connection via Grafana Proxy
+
+Monitoring menggunakan grafana sebagai proxy pada datasource prometheus, gambarannya seperti berikut:
+
+```text
+Browser <----> Grafana <----> Prometheus <----> Aplikasi
+   |                            |
+   <------------PROXY----------->
+```
+
+Dnngan begitu grafana tidak langsung mengakses prometheus, tetapi melalui grafana terlebih dahulu, sehingga akses prometheus dapat dibatasi.

@@ -187,3 +187,11 @@
 * Penambahan prometheus & grafana pada stack.
 
 **Alasan :** Untuk mempermudah kebutuhan monitoring aplikasi.
+
+## *[1.8.0] CL-15-08-2026*
+
+### Added
+
+* Penambahan dashboard grafana untuk menampilkan metrik aplikasi.
+
+**Alasan :** Untuk mempermudah visualisasi metrik aplikasi dan memantau kinerja aplikasi secara real-time.

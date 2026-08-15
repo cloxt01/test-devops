@@ -251,3 +251,11 @@
 * Penambahan alert rules pada prometheus untuk memantau aplikasi.
 
 **Alasan :** Untuk mempermudah pemantauan status aplikasi dan memberikan peringatan jika terjadi masalah, seperti aplikasi down, error rate tinggi, atau latency tinggi.
+
+## *[1.9.20] CL-15-08-2026*
+
+### Removed
+
+* Port expose pada service db di docker-compose.yml.
+
+**Alasan :** Untuk meningkatkan keamanan, port database tidak diekspos ke host, sehingga hanya dapat diakses oleh service lain dalam jaringan Docker internal.

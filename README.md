@@ -290,3 +290,13 @@ FROM python:3.9-slim
 ```
 
 **Alasan:** Image `slim` memiliki ukuran yang lebih kecil dibandingkan image Python standar sehingga lebih sesuai untuk aplikasi API sederhana.
+
+### 4.4 Versi untuk setiap image docker
+
+Semua image docker menggunakan versi yang statis
+
+**Alasan:** Menggunakan versi statis memastikan konsistensi dalam deployment, serta menghindari masalah yang mungkin timbul akibat perubahan versi.
+
+### 4.5 Penonaktifan login & password autentikasi `root` user pada target server
+
+**Alasan:** Meminimalisir akses `root` untuk mengurangi risiko penyalahgunaan akses root dan meningkatkan keamanan server.

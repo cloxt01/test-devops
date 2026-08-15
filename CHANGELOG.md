@@ -243,3 +243,11 @@
 * Penambahan collection `community.docker` pada playbook deploy `deploy.yml`.
 
 **Alasan :** Untuk mempermudah pengelolaan docker compose.
+
+## *[1.9.15] CL-15-08-2026*
+
+### Added
+
+* Penambahan alert rules pada prometheus untuk memantau aplikasi.
+
+**Alasan :** Untuk mempermudah pemantauan status aplikasi dan memberikan peringatan jika terjadi masalah, seperti aplikasi down, error rate tinggi, atau latency tinggi.

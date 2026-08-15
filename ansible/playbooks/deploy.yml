@@ -19,6 +19,8 @@
       loop:
         - "{{ '/../../docker' }}"
         - "{{ '/../../app' }}"
+        - "{{ '/../../prometheus' }}"
+        - "{{ '/../../grafana' }}"
     - name: Deploy application
       ansible.builtin.command:
         cmd: docker compose -f docker/compose.yaml up -d

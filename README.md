@@ -1,11 +1,17 @@
 # Test Materi - DevOps
 
-Sudah diuji pada OS : 
- - `Ubuntu 22.04 LTS`
+Sudah diuji pada OS:
+- `Ubuntu 22.04 LTS`
 
-## 1. Containerization
+## Requirements
 
-### Clone Repository
+- **Ansible >= 2.21.2**
+
+  Untuk menginstal Ansible, silakan ikuti panduan resmi pada [Ansible Installation](https://docs.ansible.com/projects/ansible/latest/installation_guide/installation_distros.html).
+
+## Quick Start
+
+### 1. Installation
 
 Clone repository dan masuk ke direktori project:
 
@@ -13,6 +19,53 @@ Clone repository dan masuk ke direktori project:
 git clone https://github.com/cloxt01/test-devops
 cd test-devops
 ```
+
+### 2. Setup
+
+- Salin & sesuaikan file environment:
+  ```bash
+  cp .env.example .env
+  ```
+- Install collection Ansible yang dibutuhkan:
+  ```bash
+  ansible-galaxy collection install community.general
+  ```
+- Sesuaikan konfigurasi server target pada file `ansible/inventory`:
+  ```bash
+  nano ansible/inventory
+  ```
+
+  > _Untuk informasi lebih lanjut, silakan lihat bagian [Inventory](#inventory)._
+
+- Sesuaikan variable pada host target:
+
+  1. Host Variable (`host_vars`)
+     ```bash
+     nano ansible/host_vars/<hostname>.yml
+     ```
+  2. Group Variable (`group_vars/all/vault.yml`)
+     ```bash
+     nano ansible/group_vars/all/vault.yml
+     ```
+
+  > _Untuk informasi lebih lanjut, silakan lihat bagian [Variable](#variable)._
+
+### 3. Start
+
+Jalankan playbook Ansible untuk setup server target & sesuaikan urutannya sesuai kebutuhan.
+
+Jika server target adalah server fresh (baru), urutannya adalah:
+1. `playbooks/docker.yml`
+2. `playbooks/hardening.yml`
+3. `playbooks/deploy.yml`
+
+> _Untuk informasi lebih lanjut, silakan lihat bagian [Playbooks](#playbooks)._
+
+---
+
+## 1. Containerization
+
+Workdir: `/docker`
 
 ### Konfigurasi Environment
 
@@ -36,12 +89,14 @@ APP_PORT=5000
 
 Keterangan:
 
-* `DB_HOST`: nama service PostgreSQL pada Docker Compose.
-* `DB_PORT`: port PostgreSQL di dalam container.
-* `DB_NAME`: nama database aplikasi.
-* `DB_USER`: username database.
-* `DB_PASSWORD`: password database.
-* `APP_PORT`: port aplikasi yang digunakan baik dalam container maupun pada host.
+| Variable | Deskripsi |
+|---|---|
+| `DB_HOST` | Nama service PostgreSQL pada Docker Compose |
+| `DB_PORT` | Port PostgreSQL di dalam container |
+| `DB_NAME` | Nama database aplikasi |
+| `DB_USER` | Username database |
+| `DB_PASSWORD` | Password database |
+| `APP_PORT` | Port aplikasi yang digunakan dalam container |
 
 ### Build dan Menjalankan Container
 
@@ -79,9 +134,9 @@ Secara umum, tahapan pipeline adalah:
 1. Source code diambil dari repository.
 2. Linting dijalankan untuk memeriksa kualitas dan format kode.
 3. Testing dijalankan untuk memastikan fungsi aplikasi berjalan sesuai dengan yang diharapkan.
-4. Vulnerability scanning dilakukan untuk mendeteksi kerentanan pada dependency dan pakage aplikasi.
+4. Vulnerability scanning dilakukan untuk mendeteksi kerentanan pada dependency dan package aplikasi.
 5. Jika seluruh tahapan berhasil, Docker image aplikasi akan dibuild.
-6. Image yang berhasil dibuild kemudian dipush ke GitHub Container Registry (GHCR).
+6. Image yang berhasil dibuild kemudian di-push ke GitHub Container Registry (GHCR).
 
 Pipeline menggunakan pendekatan **fail-fast**, sehingga kegagalan pada tahap sebelumnya akan menghentikan proses sebelum image dipublikasikan.
 
@@ -91,13 +146,9 @@ Pipeline menggunakan pendekatan **fail-fast**, sehingga kegagalan pada tahap seb
 
 Infrastructure as Code (IaC) menggunakan Ansible untuk melakukan provisioning, hardening, dan deployment pada server target.
 
-workdir
-```bash
-cd ansible
-```
+Workdir: `/ansible`
 
 ### Inventory
-
 
 Sesuaikan inventory dengan server target:
 
@@ -105,12 +156,18 @@ Sesuaikan inventory dengan server target:
 nano inventory
 ```
 
-Contoh:
+Contoh untuk local server:
 
 ```ini
 [servers]
-localhost --> local server
-#server --> non-local server
+localhost
+```
+
+Contoh untuk non-local server:
+
+```ini
+[servers]
+server
 
 [servers:vars]
 ansible_become=true
@@ -127,63 +184,51 @@ Install collection yang dibutuhkan:
 ansible-galaxy collection install community.general
 ```
 
-### Configuration Server
+### Variable
 
-Sebelum menjalankan playbook, pastikan anda sudah mengatur koneksi SSH untuk akses ke server target. Jika belum, gunakan perintah berikut untuk menyalin file konfigurasi SSH:
+Sebelum menjalankan playbook, pastikan Anda sudah mengatur koneksi SSH untuk akses ke server target. Jika belum, gunakan perintah berikut untuk menyalin file konfigurasi SSH:
 
-1. Salin file konfigurasi server:
+#### 1. Host Vars
 
-    Untuk local :
+Untuk local:
+```bash
+cp host_vars/localhost.yml.example host_vars/localhost.yml
+```
 
-    ```bash
-    cp host_vars/localhost.yml.example host_vars/localhost.yml
-    ```
+Untuk non-local:
+```bash
+cp host_vars/server.yml.example host_vars/server.yml
+```
 
-    Untuk non-local:
+#### 2. Group Vars
 
-    ```bash
-    cp host_vars/server.yml.example host_vars/server.yml
-    ```
-2. Konfigurasi sudo password
+Jika server target menggunakan sudo password, pastikan Anda sudah mengaturnya pada `host_vars` & `vault`. Jika belum, silakan ikuti langkah pada bagian [Vault Password](#vault-password) untuk membuat vault dan menyimpan password sudo secara aman.
 
-    Jika server target menggunakan sudo password, pastikan anda sudah mengaturnya pada `host_vars` & `vault`. Jika belum, silakan ikuti langkah berikut:
+`host_vars/<hostname>.yml`:
+```yaml
+ansible_become_password: "{{ vault_<hostname>_sudo_password }}"
+```
 
-    Ikuti langkah-langkah pada bagian [Vault Password](#vault-password) untuk membuat vault dan menyimpan password sudo secara aman.
-
-    `host_vars/<hostname>.yml` : 
-    ```bash
-    ansible_become_password: "{{ vault_<hostname>_sudo_password }}"
-    ```
-
-    `group_vars/all/vault.yml` : 
-    ```bash
-    vault_<hostname>_sudo_password: <YOUR-SUDO-PASSWORD>
-    ```
+`group_vars/all/vault.yml`:
+```yaml
+vault_<hostname>_sudo_password: <YOUR-SUDO-PASSWORD>
+```
 
 ### Vault Password
 
-
-####  Membuat Vault
-
+Membuat vault:
 ```bash
 ansible-vault create group_vars/all/vault.yml
 ```
 
-####  Mengedit Vault
-
+Mengedit vault:
 ```bash
 ansible-vault edit group_vars/all/vault.yml
 ```
 
-
-
-
 ### Playbooks
 
 #### Penggunaan Playbook
-
-
-
 
 ```bash
 ansible-playbook -i inventory playbooks/<nama-playbook>.yml
@@ -198,22 +243,15 @@ ansible-playbook -i inventory playbooks/docker.yml
 #### `playbooks/docker.yml`
 
 Digunakan untuk:
-
-* Menginstal Docker Engine.
-* Menginstal Docker Compose.
-* Memulai dan mengaktifkan service Docker.
+- Menginstal Docker Engine.
+- Menginstal Docker Compose.
+- Memulai dan mengaktifkan service Docker.
 
 #### `playbooks/hardening.yml`
 
 Digunakan untuk menerapkan konfigurasi hardening pada server target, termasuk user, group, firewall, dan SSH.
 
-_Sebelum menjalankan playbook ini, pastikan SSH key sudah digenerate manual, lalu salin (public-key) ke `ansible/keys/<inventory-hostname>/pub`._
-
-Generate key pair jika belum tersedia:
-
-```bash
-ssh-keygen -t ed25519
-```
+_Sebelum menjalankan playbook ini, pastikan SSH key sudah digenerate manual, lalu salin (public key) ke `ansible/keys/<inventory-hostname>.pub`._
 
 Struktur key pada project:
 
@@ -223,22 +261,16 @@ ansible/
     └── <hostname>.pub
 ```
 
-Contoh jika hostname pada inventory adalah `localhost`:
+**Persiapan:**
 
-```ini
-[servers]
-localhost
-```
-maka
-
-```text
-ansible/
-└── keys/
-    └── localhost.pub
-```
-
-
-Pastikan SSH key (public key) sudah dikonfigurasi sebelum menjalankan playbook ini.
+1. Generate key pair jika belum tersedia:
+   ```bash
+   ssh-keygen -t ed25519
+   ```
+2. Salin public key:
+   ```bash
+   cp ~/.ssh/id_ed25519.pub ansible/keys/<inventory-hostname>.pub
+   ```
 
 #### `playbooks/deploy.yml`
 
@@ -252,39 +284,25 @@ Digunakan untuk melakukan deployment aplikasi pada server target.
 
 Default credential database yang sebelumnya terdapat pada `app/app.py` dihapus.
 
-**Alasan:**
-
-Menyimpan credential secara langsung di source code berisiko menyebabkan kebocoran informasi sensitif.
-
----
+**Alasan:** Menyimpan credential secara langsung di source code berisiko menyebabkan kebocoran informasi sensitif.
 
 ### 4.2 Perubahan Scope Fungsi `init_db()`
 
 Scope pemanggilan fungsi `init_db()` pada `app/app.py` diubah.
 
-**Alasan:**
-
-Memastikan proses inisialisasi database tetap dijalankan ketika aplikasi dijalankan menggunakan Gunicorn.
-
----
+**Alasan:** Memastikan proses inisialisasi database tetap dijalankan ketika aplikasi dijalankan menggunakan Gunicorn.
 
 ### 4.3 Sumber Konfigurasi Port dari Environment Variable
 
-Port aplikasi pada `app/app.py` diubah agar membaca konfigurasi dari environment variable.
-
-**Alasan:**
-
-Memastikan konfigurasi port aplikasi memiliki satu sumber konfigurasi yang dapat digunakan secara konsisten oleh aplikasi dan Docker Compose.
-
-Contohnya:
+Port aplikasi pada `app/app.py` diubah agar membaca konfigurasi dari environment variable, contohnya:
 
 ```env
 APP_PORT=5000
 ```
 
-Nilai tersebut kemudian digunakan oleh aplikasi dan konfigurasi Docker Compose.
+Nilai tersebut kemudian digunakan secara konsisten oleh aplikasi dan konfigurasi Docker Compose.
 
----
+**Alasan:** Memastikan konfigurasi port aplikasi memiliki satu sumber konfigurasi yang dapat digunakan secara konsisten oleh aplikasi dan Docker Compose.
 
 ### 4.4 Penggunaan `python:3.9-slim` sebagai Base Image
 
@@ -294,6 +312,4 @@ Docker image aplikasi menggunakan:
 FROM python:3.9-slim
 ```
 
-**Alasan:**
-
-Image `slim` memiliki ukuran yang lebih kecil dibandingkan image Python standar sehingga lebih sesuai untuk aplikasi API sederhana.
+**Alasan:** Image `slim` memiliki ukuran yang lebih kecil dibandingkan image Python standar sehingga lebih sesuai untuk aplikasi API sederhana.

@@ -219,3 +219,11 @@
 * Perbaikan targets pada config prometheus (host.docker.internal -> localhost).
 
 **Alasan :** Memperbaiki konfigurasi target pada Prometheus agar support di lingkungan linux
+
+## *[1.9.1] CL-15-08-2026*
+
+### Fixed
+
+* Penambahan opsi `extra_hosts` pada service prometheus di docker-compose.yml.
+
+**Alasan :** Memperbaiki konfigurasi prometheus pada `docker/compose.yml` dapat mengakses host internal Docker dengan benar.

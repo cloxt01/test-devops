@@ -203,3 +203,11 @@
 * Penambahan stack pada deploy file & folder service pada playbook `deploy.yml`.
 
 **Alasan :** Memungkinkan untuk memulai stack monitoring (prometheus & grafana).
+
+## *[1.8.7] CL-15-08-2026*
+
+### Fixed
+
+* Perbaikan penulisan path pada loop playbook `deploy.yml` untuk stack monitoring.
+
+**Alasan :** Memperbaiki path yang digunakan dalam loop playbook `deploy.yml` sesuai dengan struktur direktori yang benar.

@@ -24,6 +24,24 @@ services:
       - "80:${APP_PORT}"
     depends_on:
       - db
-
+  prometheus:
+    container_name: prometheus-server
+    image: prom/prometheus:v3.13.2
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - app
+  grafana:
+    container_name: grafana-server
+    image: grafana/grafana:10.0.3
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
 volumes:
   postgres_data:
+  grafana_data:

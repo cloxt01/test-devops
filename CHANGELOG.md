@@ -179,3 +179,11 @@
 * Penambahan requirement `prometheus-client` pada file `requirements.txt`.
 
 **Alasan :** Untuk memungkinkan aplikasi mengekspor metrik.
+
+## *[1.7.1] CL-15-08-2026*
+
+### Added
+
+* Penambahan prometheus & grafana pada stack.
+
+**Alasan :** Untuk mempermudah kebutuhan monitoring aplikasi.

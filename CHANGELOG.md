@@ -211,3 +211,11 @@
 * Perbaikan penulisan path pada loop playbook `deploy.yml` untuk stack monitoring.
 
 **Alasan :** Memperbaiki path yang digunakan dalam loop playbook `deploy.yml` sesuai dengan struktur direktori yang benar.
+
+## *[1.9.0] CL-15-08-2026*
+
+### Fixed
+
+* Perbaikan targets pada config prometheus (host.docker.internal -> localhost).
+
+**Alasan :** Memperbaiki konfigurasi target pada Prometheus agar support di lingkungan linux

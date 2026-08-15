@@ -292,19 +292,8 @@ Scope pemanggilan fungsi `init_db()` pada `app/app.py` diubah.
 
 **Alasan:** Memastikan proses inisialisasi database tetap dijalankan ketika aplikasi dijalankan menggunakan Gunicorn.
 
-### 4.3 Sumber Konfigurasi Port dari Environment Variable
 
-Port aplikasi pada `app/app.py` diubah agar membaca konfigurasi dari environment variable, contohnya:
-
-```env
-APP_PORT=5000
-```
-
-Nilai tersebut kemudian digunakan secara konsisten oleh aplikasi dan konfigurasi Docker Compose.
-
-**Alasan:** Memastikan konfigurasi port aplikasi memiliki satu sumber konfigurasi yang dapat digunakan secara konsisten oleh aplikasi dan Docker Compose.
-
-### 4.4 Penggunaan `python:3.9-slim` sebagai Base Image
+### 4.3 Penggunaan `python:3.9-slim` sebagai Base Image
 
 Docker image aplikasi menggunakan:
 

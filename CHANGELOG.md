@@ -235,3 +235,11 @@
 * Pastikan db service sehat sebelum lanjut ke aplikasi
 
 **Alasan :** Untuk memastikan bahwa service database sudah siap sebelum aplikasi dijalankan, menghindari error koneksi database.
+
+## *[1.9.10] CL-15-08-2026*
+
+### Added
+
+* Penambahan collection `community.docker` pada playbook deploy `deploy.yml`.
+
+**Alasan :** Untuk mempermudah pengelolaan docker compose.

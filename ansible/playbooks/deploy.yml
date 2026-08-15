@@ -2,6 +2,10 @@
 - hosts: servers
   become: "{{ ansible_become | default(true) }}"
   tasks:
+    - name: Remove existing application directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: absent
     - name: Create application directory
       ansible.builtin.file:
         path: "{{ app_dir }}"
@@ -21,7 +25,16 @@
         - "{{ './../../app' }}"
         - "{{ './../../prometheus' }}"
         - "{{ './../../grafana' }}"
-    - name: Deploy application
+    - name: Build image Docker Compose
       ansible.builtin.command:
-        cmd: docker compose -f docker/compose.yaml up -d
+        cmd: docker compose -f docker/compose.yaml build
         chdir: "{{ app_dir }}"
+    - name: Start containers Docker Compose
+      community.docker.docker_compose_v2:
+        project_src: "{{ app_dir }}/docker"
+        state: present
+        env_files:
+          - ".env"
+        recreate: 'always'
+        files:
+          - compose.yaml

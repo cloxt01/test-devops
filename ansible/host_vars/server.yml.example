@@ -1,0 +1,11 @@
+ansible_host: <SERVER-IP> 
+ansible_port: <SERVER-SSH-PORT>
+ansible_user: <SERVER-SSH-USER>
+ansible_password: <SERVER-SSH-PASSWORD>
+ansible_ssh_private_key_file: <PATH-TO-PRIVATE-KEY-FILE>
+
+ansible_become_password: "{{ vault_server_sudo_password }}"
+
+app_user: appuser
+app_group: appgroup
+app_dir: /opt/app

@@ -91,25 +91,30 @@ Pipeline menggunakan pendekatan **fail-fast**, sehingga kegagalan pada tahap seb
 
 Infrastructure as Code (IaC) menggunakan Ansible untuk melakukan provisioning, hardening, dan deployment pada server target.
 
+workdir
+```bash
+cd ansible
+```
+
 ### Inventory
 
-Salin file inventory example:
-
-```bash
-cp ansible/inventory.example ansible/inventory
-```
 
 Sesuaikan inventory dengan server target:
 
 ```bash
-nano ansible/inventory
+nano inventory
 ```
 
 Contoh:
 
 ```ini
 [servers]
-localhost ansible_host=127.0.0.1
+localhost --> local server
+#server --> non-local server
+
+[servers:vars]
+ansible_become=true
+ansible_become_method=sudo
 ```
 
 > Gunakan group inventory seperti `servers` pada playbook.
@@ -122,24 +127,75 @@ Install collection yang dibutuhkan:
 ansible-galaxy collection install community.general
 ```
 
+### Configuration Server
+
+Sebelum menjalankan playbook, pastikan anda sudah mengatur koneksi SSH untuk akses ke server target. Jika belum, gunakan perintah berikut untuk menyalin file konfigurasi SSH:
+
+1. Salin file konfigurasi server:
+
+    Untuk local :
+
+    ```bash
+    cp host_vars/localhost.yml.example host_vars/localhost.yml
+    ```
+
+    Untuk non-local:
+
+    ```bash
+    cp host_vars/server.yml.example host_vars/server.yml
+    ```
+2. Konfigurasi sudo password
+
+    Jika server target menggunakan sudo password, pastikan anda sudah mengaturnya pada `host_vars` & `vault`. Jika belum, silakan ikuti langkah berikut:
+
+    Ikuti langkah-langkah pada bagian [Vault Password](#vault-password) untuk membuat vault dan menyimpan password sudo secara aman.
+
+    `host_vars/<hostname>.yml` : 
+    ```bash
+    ansible_become_password: "{{ vault_<hostname>_sudo_password }}"
+    ```
+
+    `group_vars/all/vault.yml` : 
+    ```bash
+    vault_<hostname>_sudo_password: <YOUR-SUDO-PASSWORD>
+    ```
+
+### Vault Password
+
+
+####  Membuat Vault
+
+```bash
+ansible-vault create group_vars/all/vault.yml
+```
+
+####  Mengedit Vault
+
+```bash
+ansible-vault edit group_vars/all/vault.yml
+```
+
+
+
 
 ### Playbooks
 
 #### Penggunaan Playbook
 
-Sebelum menjalankan playbook, pastikan anda sudah mengatur koneksi SSH untuk akses ke server target pada file inventory `ansible/inventory`.
+
+
 
 ```bash
-ansible-playbook -i ansible/inventory ansible/playbooks/<nama-playbook>.yml
+ansible-playbook -i inventory playbooks/<nama-playbook>.yml
 ```
 
 Contoh:
 
 ```bash
-ansible-playbook -i ansible/inventory ansible/playbooks/docker.yml
+ansible-playbook -i inventory playbooks/docker.yml
 ```
 
-#### `ansible/playbooks/docker.yml`
+#### `playbooks/docker.yml`
 
 Digunakan untuk:
 
@@ -147,7 +203,7 @@ Digunakan untuk:
 * Menginstal Docker Compose.
 * Memulai dan mengaktifkan service Docker.
 
-#### `ansible/playbooks/hardening.yml`
+#### `playbooks/hardening.yml`
 
 Digunakan untuk menerapkan konfigurasi hardening pada server target, termasuk user, group, firewall, dan SSH.
 
@@ -164,29 +220,27 @@ Struktur key pada project:
 ```text
 ansible/
 └── keys/
-    └── <inventory-hostname>/
-        └── pub
+    └── <hostname>.pub
 ```
 
 Contoh jika hostname pada inventory adalah `localhost`:
 
 ```ini
 [servers]
-localhost ansible_host=127.0.0.1
+localhost
 ```
 maka
 
 ```text
 ansible/
 └── keys/
-    └── localhost/
-        └── pub
+    └── localhost.pub
 ```
 
 
-Pastikan SSH key sudah dikonfigurasi sebelum menjalankan playbook ini.
+Pastikan SSH key (public key) sudah dikonfigurasi sebelum menjalankan playbook ini.
 
-#### `ansible/playbooks/deploy.yml`
+#### `playbooks/deploy.yml`
 
 Digunakan untuk melakukan deployment aplikasi pada server target.
 

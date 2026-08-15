@@ -162,3 +162,11 @@
 * Penambahan opsi `shell: /bin/bash` pada pembuatan user baru di playbook `hardening.yml`.
 
 **Alasan :** Agar user baru yang dibuat memiliki shell default yang sesuai.
+
+## *[1.6.5] CL-15-08-2026*
+
+### Added
+
+* Penambahan vault, guna menyimpan infomasi sensitif.
+
+**Alasan :** Untuk meningkatkan keamanan dengan menyimpan informasi sensitif seperti password dalam bentuk terenkripsi.

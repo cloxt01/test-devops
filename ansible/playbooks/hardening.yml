@@ -10,18 +10,18 @@
     # User & Group
     - name: Create user for the application
       ansible.builtin.user:
-        name: "{{ user }}"
+        name: "{{ app_user }}"
         state: present
         shell: /bin/bash
         create_home: yes
     - name: Create group for the application
       ansible.builtin.group:
-        name: "{{ group }}"
+        name: "{{ app_group }}"
         state: present
     - name: Add user to group
       ansible.builtin.user:
-        name: "{{ user }}"
-        groups: "{{ group }}"
+        name: "{{ app_user }}"
+        groups: "{{ app_group }}"
         append: yes
     # Firewall
     - name: Install UFW
@@ -46,7 +46,7 @@
     # SSH Hardening
     - name: Copy SSH public key
       ansible.posix.authorized_key:
-        user: "{{ user }}"
+        user: "{{ app_user }}"
         state: present
         key: "{{lookup('file', '../keys/' + inventory_hostname + '.pub')}}"
     - name: Disable root login

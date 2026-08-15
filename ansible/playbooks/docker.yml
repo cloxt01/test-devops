@@ -1,6 +1,6 @@
 ---
 - hosts: servers
-  become: true
+  become: "{{ ansible_become | default(true) }}"
   tasks:
     - name: Install prerequisites dependencies
       ansible.builtin.apt:

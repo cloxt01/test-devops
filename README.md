@@ -57,7 +57,7 @@ cd test-devops
     ```
   - Simpan vault password:
     ```bash
-    cat <YOUR-VAULT-PASSWORD> > .vault_pass
+    echo <YOUR-VAULT-PASSWORD> > ansible/.vault_pass
     ```
 
   > _Untuk informasi lebih lanjut, silakan lihat bagian [Vault](#vault)._
@@ -184,6 +184,9 @@ Contoh untuk local server:
 ```ini
 [servers]
 localhost
+
+ansible_become=true
+ansible_become_method=sudo
 ```
 
 Contoh untuk non-local server:
@@ -292,7 +295,7 @@ ansible/
    ```
 2. Salin public key:
    ```bash
-   cp ~/.ssh/id_ed25519.pub ansible/keys/<inventory-hostname>.pub
+   cp ~/.ssh/id_ed25519.pub keys/<inventory-hostname>.pub
    ```
 
 #### `playbooks/deploy.yml`

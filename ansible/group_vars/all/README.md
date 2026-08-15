@@ -49,18 +49,8 @@ cd test-devops
      cp ansible/group_vars/all/vault.yml.example ansible/group_vars/all/vault.yml
      nano ansible/group_vars/all/vault.yml
      ```
-- Vault:
 
-  - Encrypt vault file:
-    ```bash
-    ansible-vault encrypt ansible/group_vars/all/vault.yml
-    ```
-  - Simpan vault password:
-    ```bash
-    cat <YOUR-VAULT-PASSWORD> > .vault_pass
-    ```
-
-  > _Untuk informasi lebih lanjut, silakan lihat bagian [Vault](#vault)._
+  > _Untuk informasi lebih lanjut, silakan lihat bagian [Variable](#variable)._
 
 ### 3. Start
 
@@ -70,17 +60,6 @@ Jika server target adalah server fresh (baru), urutannya adalah:
 1. `playbooks/docker.yml`
 2. `playbooks/hardening.yml`
 3. `playbooks/deploy.yml`
-
-Untuk memulai :
-
-- Masuk ke direktori project:
-```bash
-cd ansible
-```
-- Jalankan playbook
-```bash
-ansible-playbook -i inventory playbooks/<nama-playbook>.yml --vault-password-file .vault_pass
-```
 
 > _Untuk informasi lebih lanjut, silakan lihat bagian [Playbooks](#playbooks)._
 
@@ -225,7 +204,7 @@ cp host_vars/server.yml.example host_vars/server.yml
 
 #### 2. Group Vars
 
-Jika server target menggunakan sudo password, pastikan Anda sudah mengaturnya pada `host_vars` & `vault`. Jika belum, silakan ikuti langkah pada bagian [Vault](#vault) untuk membuat vault dan menyimpan password sudo secara aman.
+Jika server target menggunakan sudo password, pastikan Anda sudah mengaturnya pada `host_vars` & `vault`. Jika belum, silakan ikuti langkah pada bagian [Vault Password](#vault-password) untuk membuat vault dan menyimpan password sudo secara aman.
 
 `host_vars/<hostname>.yml`:
 ```yaml
@@ -237,7 +216,7 @@ ansible_become_password: "{{ vault_<hostname>_sudo_password }}"
 vault_<hostname>_sudo_password: <YOUR-SUDO-PASSWORD>
 ```
 
-### Vault
+### Vault Password
 
 Membuat vault:
 ```bash

@@ -3,5 +3,6 @@ __pycache__
 .pytest_cache
 .ruff_cache
 ansible/keys/*/*.!pub
+ansible/group_vars/*/*.yml
 .vault_pass
 .vault-pass

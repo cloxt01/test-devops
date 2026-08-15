@@ -1,0 +1,2 @@
+#vault_localhost_sudo_password: <LOCALHOST-SUDO-PASSWORD>
+#vault_server_sudo_password: <SERVER-SUDO-PASSWORD>

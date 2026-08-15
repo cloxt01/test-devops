@@ -8,11 +8,17 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$DB_USER -d $$DB_NAME"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     ports:
       - "${DB_PORT}:${DB_PORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - .env:/app/.env
+
   app:
     container_name: app-server
     build:
@@ -23,7 +29,9 @@ services:
     ports:
       - "80:${APP_PORT}"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
   prometheus:
     container_name: prometheus-server
     image: prom/prometheus:v3.13.2
@@ -32,20 +40,22 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
       - app
+
   grafana:
     container_name: grafana-server
     image: grafana/grafana:10.0.3
     ports:
       - "3000:3000"
     volumes:
+      - ../grafana/provisioning:/etc/grafana/provisioning
+      - ../grafana/dashboards:/var/lib/grafana/dashboards
       - grafana_data:/var/lib/grafana
-      - ./../grafana/provisioning:/etc/grafana/provisioning
-      - ./../grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
+
 volumes:
   postgres_data:
   grafana_data:

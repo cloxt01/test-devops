@@ -131,7 +131,7 @@ Workdir: `/ansible`
 ### Install Ansible Collection
 
 ```bash
-ansible-galaxy collection install community.general
+ansible-galaxy collection install community.general community.docker
 ```
 
 ### Inventory

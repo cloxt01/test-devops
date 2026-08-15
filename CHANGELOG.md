@@ -227,3 +227,11 @@
 * Penambahan opsi `extra_hosts` pada service prometheus di docker-compose.yml.
 
 **Alasan :** Memperbaiki konfigurasi prometheus pada `docker/compose.yml` dapat mengakses host internal Docker dengan benar.
+
+## *[1.9.5] CL-15-08-2026*
+
+### Added
+
+* Pastikan db service sehat sebelum lanjut ke aplikasi
+
+**Alasan :** Untuk memastikan bahwa service database sudah siap sebelum aplikasi dijalankan, menghindari error koneksi database.

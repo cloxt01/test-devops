@@ -182,7 +182,13 @@ Untuk non-local:
 cp host_vars/server.yml.example host_vars/server.yml
 ```
 
-Isi `host_vars/<inventory-hostname>.yml` (jika server pakai sudo password):
+Cek host variable:
+```bash
+cat host_vars/<inventory-hostname>.yml
+```
+
+_Pastikan ada baris seperti_
+
 ```yaml
 ansible_become_password: "{{ vault_<inventory-hostname>_sudo_password }}"
 ```
